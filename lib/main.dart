@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_final_project/restaurant.dart';
 
 void main() {
-  runApp(const home());
+  runApp(const RestaurantApp());
+}
+
+class RestaurantApp extends StatelessWidget {
+  const RestaurantApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: home(),
+    );
+  }
 }
 
 class home extends StatefulWidget {
@@ -14,8 +27,7 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text("Restaurant Review"),
           centerTitle: true,
@@ -35,7 +47,7 @@ class _homeState extends State<home> {
           child: Column(
             children: [
 
-              // Search Bar (Display for now, function later)
+              // Search Bar *make functional
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: TextField(
@@ -58,10 +70,12 @@ class _homeState extends State<home> {
                   children: [
                     SizedBox(height: 20),
 
-                    // Restaurant Card Holder
+                    // Restaurant Card Holder clickable/Redirect to specific resto
+                    // Iterate based on restos in db
+                    // *to be configed based on resto on db*
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: // Adds space below and to the right)
+                      child:
                       Card(
                         color: Colors.white,
                         elevation: 0,
@@ -69,35 +83,29 @@ class _homeState extends State<home> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        // Clickable/Redirect Function
                         child: InkWell(
                           onTap: () {
-                            // Navigator to the details page
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => const DetailsPage()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const RestaurantPage()),
+                            );
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Image
+                              // Image *replace with corresponding db data*
                               ClipRRect(
-                                // borderRadius: const BorderRadius.only(
-                                //   // topLeft: Radius.circular(20),
-                                //   // topRight: Radius.circular(20),
-                                // ),
                                 child: Image.asset(
-                                  'images/resto-placeholder.png', // Make sure your asset is configured
-                                  height: 140, // Match screenshot proportion
+                                  'images/resto-placeholder.png',
+                                  height: 140,
                                   width: double.infinity,
-                                  fit: BoxFit.cover, // Fill the space without stretching
+                                  fit: BoxFit.cover,
                                 ),
                               ),
 
                               // Text
                               Padding(
-                                padding: EdgeInsets.all(16.0), // Padding around all text
+                                padding: EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -113,7 +121,7 @@ class _homeState extends State<home> {
 
                                     SizedBox(height: 8),
 
-                                    // Tags/Category
+                                    // Tags *to be configured based on db*
                                     Row(
                                       children: [
                                         Text("Cuisine", style: TextStyle(color: Colors.grey, fontSize: 14)),
@@ -126,12 +134,11 @@ class _homeState extends State<home> {
 
                                     SizedBox(height: 12),
 
-                                    // Rating
+                                    // Rating *to be configured based on db*
                                     Row(
                                       children: [
                                         Row(
                                           children: [
-                                            // Should Display based on Backend Data Rating
                                             Icon(Icons.star, color: Colors.amber, size: 20),
                                             Icon(Icons.star, color: Colors.amber, size: 20),
                                             Icon(Icons.star, color: Colors.amber, size: 20),
@@ -164,7 +171,6 @@ class _homeState extends State<home> {
             ],
           ),
         ),
-      ),
     );
   }
 }
