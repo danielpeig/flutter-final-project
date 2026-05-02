@@ -44,7 +44,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         top: 50,
                         left: 20,
                         child: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.5),
+                          backgroundColor: Colors.black.withValues(alpha: 0.5),
                           child: IconButton(
                             icon: Icon(Icons.arrow_back, color: Colors.white),
                             onPressed: () => Navigator.pop(context),
@@ -56,7 +56,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         top: 50,
                         right: 20,
                         child: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.5),
+                          backgroundColor: Colors.black.withValues(alpha: 0.5),
                           child: IconButton(
                             icon: Icon(Icons.bookmark_border, color: Colors.white),
                             onPressed: () {},
