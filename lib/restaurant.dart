@@ -88,17 +88,17 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    restoInfo['name'] ?? "Restaurant Name",
+                                    restoInfo['name'],
                                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    restoInfo['cuisine'] ?? "Cuisine Type",
+                                    restoInfo['category'],
                                     style: TextStyle(color: Colors.grey, fontSize: 16),
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    restoInfo['address'] ?? "Address not available",
+                                    restoInfo['address'],
                                     style: TextStyle(color: Colors.grey, fontSize: 14),
                                   ),
                                 ],
@@ -143,65 +143,82 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     height: 430,
                     child: TabBarView(
                       children: [
-                        // Reviews Tab
-                        ListView.builder(
-                          padding: EdgeInsets.all(20.0),
-                          itemCount: 5, // Placeholder kung ilan reviews
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('tbl_reviews').
+                          where('restaurant_id', isEqualTo: widget.restaurantId).snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                              return Center(child: Text("No reviews yet. Be the first!"));
+                            }
+
+                            var reviews = snapshot.data!.docs;
+
+                            return ListView.builder(
+                              padding: EdgeInsets.all(20.0),
+                              itemCount: reviews.length,
+                              itemBuilder: (context, index) {
+                                var reviewData = reviews[index];
+
+                                var date = (reviewData['timestamp'] as Timestamp).toDate();
+                                var formattedDate = "${date.day}/${date.month}/${date.year}";
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      radius: 22,
-                                      backgroundImage: AssetImage('images/avatar-placeholder.png'),
-                                    ),
-                                    SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Customer Reviewer",
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                          ),
-                                          Text(
-                                            "Posted on Dec 12, 2025",
-                                            style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                     Row(
                                       children: [
-                                        Icon(Icons.star, color: Colors.amber, size: 16),
-                                        Icon(Icons.star, color: Colors.amber, size: 16),
-                                        Icon(Icons.star, color: Colors.amber, size: 16),
-                                        Icon(Icons.star, color: Colors.amber, size: 16),
-                                        Icon(Icons.star, color: Colors.grey, size: 16),
+                                        CircleAvatar(
+                                          radius: 22,
+                                          backgroundImage: AssetImage('images/avatar-placeholder.png'),
+                                        ),
+                                        SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Customer Reviewer", // You can later link this to 'user_id' to get actual names
+                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                              ),
+                                              Text(
+                                                "Posted on $formattedDate",
+                                                style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          children: List.generate(5, (starIndex) {
+                                            return Icon(
+                                              Icons.star,
+                                              color: starIndex < (reviewData['rating'] ?? 0)
+                                                  ? Colors.amber
+                                                  : Colors.grey.shade300,
+                                              size: 16,
+                                            );
+                                          }),
+                                        ),
                                       ],
                                     ),
+                                    SizedBox(height: 12),
+                                    Text(
+                                      reviewData['content'] ?? "",
+                                      style: TextStyle(color: Colors.black87, height: 1.4),
+                                    ),
+                                    SizedBox(height: 16),
+                                    Divider(color: Colors.grey.shade300, thickness: 1),
+                                    SizedBox(height: 16),
                                   ],
-                                ),
-                                SizedBox(height: 12),
-                                Text(
-                                  "Testing Review Content. This is where the user's feedback will go once the database is connected.",
-                                  style: TextStyle(color: Colors.black87, height: 1.4),
-                                ),
-                                SizedBox(height: 16),
-
-                                Divider(color: Colors.grey.shade300, thickness: 1),
-                                SizedBox(height: 16),
-                              ],
+                                );
+                              },
                             );
                           },
                         ),
-
-                        // Gallery Tab
-                        Center(
-                            child: Text("Image Gallery Goes Here")
-                        ),
+                        Center(child: Text("Image Gallery Goes Here")),
                       ],
                     ),
                   ),
@@ -224,7 +241,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AddReviewPage(restaurantId: 'resto_123'),
+                        builder: (context) => AddReviewPage(restaurantId: widget.restaurantId),
                       ),
                     );
                   },
