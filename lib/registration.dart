@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'login.dart'; // Ensure this matches your login filename
+import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -170,26 +170,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
 
                     try {
+                      var userCredentials = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password,);
 
-                      // TEMPORARY EMAIL FOR FIREBASE AUTH
-                     // String email = "$username@gmail.com";
+                      await userCredentials.user!.updateDisplayName(username);
 
-                      var userCredential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-
-                      await FirebaseFirestore.instance
-                          .collection("tbl_user")
-                          .doc(userCredential.user!.uid)
-                          .set({
-
+                      await FirebaseFirestore.instance.collection("tbl_users").doc(userCredentials.user!.uid).set({
                         "fullname": fullname,
                         "email": email,
                         "username": username,
-                        "password": password,
-
                       });
 
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -213,7 +201,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       );
                     }
-
                   },
 
                   style: ElevatedButton.styleFrom(
