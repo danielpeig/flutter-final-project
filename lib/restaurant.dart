@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/add_review.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RestaurantPage extends StatefulWidget {
-  const RestaurantPage({super.key});
+  final String restaurantId;
+
+  const RestaurantPage({super.key, required this.restaurantId});
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -22,7 +25,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 children: [
                   Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 260,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -40,93 +43,90 @@ class _RestaurantPageState extends State<RestaurantPage> {
                           },
                         ),
                       ),
-                      // Back Button
                       Positioned(
                         top: 50,
                         left: 20,
                         child: CircleAvatar(
-                          backgroundColor: Colors.black.withValues(alpha: 0.5),
+                          backgroundColor: Colors.black.withOpacity(0.5),
                           child: IconButton(
                             icon: Icon(Icons.arrow_back, color: Colors.white),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ),
                       ),
-                      // Bookmark Button
-                      Positioned(
-                        top: 50,
-                        right: 20,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black.withValues(alpha: 0.5),
-                          child: IconButton(
-                            icon: Icon(Icons.bookmark_border, color: Colors.white),
-                            onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddReviewPage(restaurantId: 'resto_123'),
-                      ),
-                    );
-                  },
-                          ),
-                        ),
-                      ),
                     ],
                   ),
 
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Restaurant Name",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "Cuisine Type",
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "123 Street Address, City Name",
-                                style: TextStyle(color: Colors.grey, fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('tbl_restaurants')
+                        .doc(widget.restaurantId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
 
-                        // Rating
-                        Padding(
-                          padding: EdgeInsets.only(top: 32.0),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8),
+                      if (!snapshot.hasData) {
+                        return Center(
+                            child: CircularProgressIndicator()
+                        );
+                      }
+
+                      if (!snapshot.data!.exists) {
+                        return Center(
+                            child: Text("Restaurant not found")
+                        );
+                      }
+
+                      var restoInfo = snapshot.data!.data() as Map<String, dynamic>;
+
+                      return Padding(
+                        padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    restoInfo['name'] ?? "Restaurant Name",
+                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    restoInfo['cuisine'] ?? "Cuisine Type",
+                                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    restoInfo['address'] ?? "Address not available",
+                                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "4.5",
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                                ),
-                                Text("52 Reviews", style: TextStyle(color: Colors.grey, fontSize: 10),)
-                              ],
-                            )
-                          ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "${restoInfo['rating'] ?? '0.0'}",
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                                  ),
+                                  Text(
+                                    "${restoInfo['totalReviews'] ?? '0'} Reviews",
+                                    style: TextStyle(color: Colors.grey, fontSize: 10),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
 
                   TabBar(

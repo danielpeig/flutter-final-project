@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/restaurant.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const RestaurantApp());
 }
 
@@ -66,106 +79,134 @@ class _homeState extends State<home> {
               ),
 
               Expanded(
-                child: ListView(
-                  children: [
-                    SizedBox(height: 20),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('tbl_restaurants').snapshots(),
+                  builder: (context, snapshots) {
 
-                    // Restaurant Card Holder clickable/Redirect to specific resto
-                    // Iterate based on restos in db
-                    // *to be configed based on resto on db*
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child:
-                      Card(
-                        color: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const RestaurantPage()),
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Image *replace with corresponding db data*
-                              ClipRRect(
-                                child: Image.asset(
-                                  'images/resto-placeholder.png',
-                                  height: 140,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                    // Loading Indicator
+                    if(!snapshots.hasData){
+                      return Center(
+                          child: CircularProgressIndicator()
+                      );
+                    }
 
-                              // Text
-                              Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Restaurant Name
-                                    Text(
-                                      "Restaurant Name",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
+                    // Handle Errors
+                    if (snapshots.hasError) {
+                      return Center(
+                          child: Text("Something went wrong")
+                      );
+                    }
 
-                                    SizedBox(height: 8),
+                    var displayRestos = snapshots.data!.docs;
 
-                                    // Tags *to be configured based on db*
-                                    Row(
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(top: 20),
+                      itemCount: displayRestos.length,
+                      itemBuilder: (context, index) {
+
+                        var restos = displayRestos[index];
+                        String restoId = restos.id;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            clipBehavior: Clip.antiAlias,
+                            child: InkWell(
+                              onTap: () {
+                                // 4. Pass the ID to your RestaurantPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RestaurantPage(restaurantId: restoId),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.asset(
+                                    'images/resto-placeholder.png',
+                                    height: 140,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("Cuisine", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                                        SizedBox(width: 5), // Small spacer
-                                        Text("Food", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                                        SizedBox(width: 5), // Small spacer
-                                        Text("Tags", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                                      ],
-                                    ),
-
-                                    SizedBox(height: 12),
-
-                                    // Rating *to be configured based on db*
-                                    Row(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.star, color: Colors.amber, size: 20),
-                                            Icon(Icons.star, color: Colors.amber, size: 20),
-                                            Icon(Icons.star, color: Colors.amber, size: 20),
-                                            Icon(Icons.star, color: Colors.amber, size: 20),
-                                            Icon(Icons.star, color: Colors.grey, size: 20), // Empty star
-                                          ],
-                                        ),
-                                        SizedBox(width: 8),
                                         Text(
-                                          "4.5",
-                                          style: TextStyle(
-                                            fontSize: 16,
+                                          restos['name'],
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
+                                        const SizedBox(height: 8),
+                                        // Use the category field from your screenshot
+                                        Text(
+                                          restos['category'],
+                                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Row(
+                                          children: [
+
+                                            Row(
+                                              children: const [
+
+                                                Icon(Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 20),
+
+                                                Icon(Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 20),
+
+                                                Icon(Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 20),
+
+                                                Icon(Icons.star,
+                                                    color: Colors.amber,
+                                                    size: 20),
+
+                                                Icon(Icons.star,
+                                                    color: Colors.grey,
+                                                    size: 20),
+
+                                              ],
+                                            ),
+
+                                            const SizedBox(width: 8),
+
+                                            const Text(
+                                              "4.5",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight:
+                                                FontWeight.w500,
+                                              ),
+                                            ),
+
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],
