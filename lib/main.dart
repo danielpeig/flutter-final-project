@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/registration.dart';
 import 'package:flutter_final_project/restaurant.dart';
@@ -44,13 +45,42 @@ class _homeState extends State<home> {
           centerTitle: true,
         ),
 
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              Text("Profile")
-            ],
-          ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    child: Icon(Icons.person),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                      FirebaseAuth.instance.currentUser?.displayName ?? ""
+                  ),
+                  Text(
+                    FirebaseAuth.instance.currentUser?.email ?? ""
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Logout"),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context)=> LoginPage()
+                    ),
+                );
+              },
+            ),
+          ],
         ),
+      ),
 
         backgroundColor: Color.fromARGB (220, 248, 250, 252),
 
@@ -145,7 +175,6 @@ class _homeState extends State<home> {
                                           ),
                                         ),
                                         const SizedBox(height: 8),
-                                        // Use the category field from your screenshot
                                         Text(
                                           restos['category'],
                                           style: const TextStyle(color: Colors.grey, fontSize: 14),
