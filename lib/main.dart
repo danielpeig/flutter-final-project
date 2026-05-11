@@ -154,8 +154,8 @@ class _homeState extends State<home> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    'images/resto-placeholder.png',
+                                  Image.network(
+                                    restos['image_url'],
                                     height: 140,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
