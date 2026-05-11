@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_final_project/add_review.dart';
 
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({super.key});
@@ -59,7 +60,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                           backgroundColor: Colors.black.withValues(alpha: 0.5),
                           child: IconButton(
                             icon: Icon(Icons.bookmark_border, color: Colors.white),
-                            onPressed: () {},
+                            onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddReviewPage(restaurantId: 'resto_123'),
+                      ),
+                    );
+                  },
                           ),
                         ),
                       ),
@@ -212,7 +220,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     backgroundColor: Colors.black,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddReviewPage(restaurantId: 'resto_123'),
+                      ),
+                    );
+                  },
                   child: Text(
                     "Leave a Review",
                     style: TextStyle(color: Colors.white, fontSize: 16),
