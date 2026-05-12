@@ -21,239 +21,339 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
 
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.all(25),
-          padding: const EdgeInsets.all(25),
+      backgroundColor: Colors.white,
 
-          decoration: BoxDecoration(
+      body: ListView(
+        children: [
+
+          // ── YELLOW WAVE HEADER ──
+          Container(
+            height: 280,
+            width: double.infinity,
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
+            child: Stack(
+              children: [
 
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-
-              const CircleAvatar(
-                radius: 45,
-                backgroundColor: Colors.black54,
-                child: Icon(
-                  Icons.person,
-                  size: 55,
-                  color: Colors.white,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Sign Up",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 5),
-
-              const Text(
-                "Create your account",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // FULL NAME
-              TextFormField(
-                controller: fullnameController,
-                decoration: InputDecoration(
-                  labelText: "Full Name",
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              //email
-
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: const Icon(Icons.email),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // USERNAME
-              TextFormField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: "Username",
-                  prefixIcon: const Icon(Icons.account_circle),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // PASSWORD
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: const Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // CONFIRM PASSWORD
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  prefixIcon: const Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-
-                child: ElevatedButton(
-
-                  onPressed: () async {
-
-                    var fullname = fullnameController.text;
-                    var email = emailController.text;
-                    var username = usernameController.text;
-                    var password = passwordController.text;
-                    var confirmPassword = confirmPasswordController.text;
-
-                    // CHECK PASSWORD
-                    if(password != confirmPassword){
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Password does not match"),
-                        ),
-                      );
-
-                      return;
-                    }
-
-                    try {
-                      var userCredentials = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password,);
-
-                      await userCredentials.user!.updateDisplayName(username);
-
-                      await FirebaseFirestore.instance.collection("tbl_users").doc(userCredentials.user!.uid).set({
-                        "fullname": fullname,
-                        "email": email,
-                        "username": username,
-                      });
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Registration Successful"),
-                        ),
-                      );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-
-                    } on FirebaseAuthException catch (e){
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.message.toString()),
-                        ),
-                      );
-                    }
-                  },
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                // Yellow background blob
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 50,
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(80),
+                        bottomRight: Radius.circular(180),
+                      ),
                     ),
                   ),
+                ),
 
-                  child: const Text(
-                    "Sign Up",
+                // Second wave shape
+                Positioned(
+                  top: 60,
+                  left:0,
+                  child: Container(
+                    height: 180,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.amber[200],
+                      borderRadius:  BorderRadius.only(
+                        bottomRight: Radius.circular(200),
+                        topRight: Radius.circular(100),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Title at bottom of wave
+                Positioned(
+                  bottom: 80,
+                  left: 30,
+                  child: SizedBox(
+                    width: 400,
+                    child: Text(
+                      "Join Us!",
+                      softWrap: true,
+                      style: TextStyle(
+                        fontSize: 80,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top:200,
+                  bottom: 10,
+                  left: 30,
+                  child: SizedBox(
+                    width: 400, // adjust width
+                    child: Text(
+                      "Create your CraveHunt account to discover delicious restaurants and trusted reviews.",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+
+          // ── FORM AREA ──
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Create Your Account",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                      color: Colors.black12,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 15),
+               SizedBox(height: 10),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                // FULL NAME
+                TextFormField(
+                  controller: fullnameController,
+                  style: TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Full Name",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.person, color: Colors.amber[600]),
+                    border: UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
 
-                  const Text("Already have an account? "),
+                SizedBox(height: 15),
 
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
+                // EMAIL
+                TextFormField(
+                  controller: emailController,
+                  style: TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.email, color: Colors.amber[600]),
+                    border: UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 15),
+
+                // USERNAME
+                TextFormField(
+                  controller: usernameController,
+                  style: TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Username",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.account_circle, color: Colors.amber[600]),
+                    border: UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 15),
+
+                // PASSWORD
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  style: TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.lock, color: Colors.amber[600]),
+                    border: UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 15),
+
+                // CONFIRM PASSWORD
+                TextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  style: TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Confirm Password",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.lock, color: Colors.amber[600]),
+                    border: UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 30),
+
+                // SIGN UP BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+
+                  child: ElevatedButton(
+
+                    onPressed: () async {
+
+                      var fullname = fullnameController.text;
+                      var email = emailController.text;
+                      var username = usernameController.text;
+                      var password = passwordController.text;
+                      var confirmPassword = confirmPasswordController.text;
+
+                      if (password != confirmPassword) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Password does not match"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      try {
+                        var userCredentials = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+
+                        await userCredentials.user!.updateDisplayName(username);
+
+                        await FirebaseFirestore.instance
+                            .collection("tbl_users")
+                            .doc(userCredentials.user!.uid)
+                            .set({
+                          "fullname": fullname,
+                          "email": email,
+                          "username": username,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Registration Successful"),
+                          ),
+                        );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+
+                      } on FirebaseAuthException catch (e) {
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.message.toString()),
+                          ),
+                        );
+                      }
                     },
 
-                    child: const Text(
-                      "Login",
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    child: Text(
+                      "SIGN UP",
                       style: TextStyle(
-                        color: Colors.blue,
+                        fontSize: 16,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
                       ),
                     ),
                   ),
+                ),
 
-                ],
-              ),
+                SizedBox(height: 20),
 
-            ],
+                // LOGIN LINK
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    Text(
+                      "Already have an account ? ",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>LoginPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Login Up",
+                        style: TextStyle(
+                          color: Colors.amber[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+
+                SizedBox(height: 20),
+
+              ],
+            ),
           ),
-        ),
+
+        ],
       ),
     );
   }

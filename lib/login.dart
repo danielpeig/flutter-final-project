@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'main.dart';
 import 'registration.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -22,166 +20,246 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
 
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
 
-      body: Center(
-        child: Container(
+      body: ListView(
+        children: [
 
-          margin: const EdgeInsets.all(25),
-          padding: const EdgeInsets.all(25),
-
-          decoration: BoxDecoration(
+          // ── YELLOW WAVE HEADER ──
+          Container(
+            height: 300,
+            width: double.infinity,
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
+            child: Stack(
+              children: [
 
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-
-              const CircleAvatar(
-                radius: 45,
-                backgroundColor: Colors.black54,
-                child: Icon(
-                  Icons.person,
-                  size: 55,
-                  color: Colors.white,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Login",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // USERNAME
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // PASSWORD
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: const Icon(Icons.lock),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-
-                child: ElevatedButton(
-
-                  onPressed: () async {
-
-                    var email = emailController.text;
-                    var password = passwordController.text;
-
-                    try {
-
-                      await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Login Successful"),
-                        ),
-                      );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const home(),
-                        ),
-                      );
-
-                    } on FirebaseAuthException catch (e){
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.message.toString()),
-                        ),
-                      );
-                    }
-
-                  },
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                // Yellow background blob
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 50,
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(80),
+                        bottomRight: Radius.circular(180),
+                      ),
                     ),
                   ),
+                ),
 
-                  child: const Text(
-                    "Login",
+                // Second wave shape
+                Positioned(
+                  top: 60,
+                  left:0,
+                  child: Container(
+                    height: 180,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.amber[200],
+                      borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(200),
+                        topRight: Radius.circular(100),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Title at bottom of wave
+                Positioned(
+                  bottom: 100,
+                  left: 30,
+                  child: Text(
+                    "Welcome to",
                     style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                      fontSize: 50,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top: 180,
+                  bottom: 10,
+                  left: 30,
+                  child: Text(
+                    "CraveHunt!",
+                    style: TextStyle(
+                      fontSize: 80,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 25),
+          // ── FORM AREA ──
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Sign-in to your Account",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black12,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                SizedBox(height: 20),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
-                        ),
-                      );
+                // EMAIL
+                TextFormField(
+                  controller: emailController,
+                  style: const TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.email, color: Colors.amber[600]),
+                    border: const UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                // PASSWORD
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  style: const TextStyle(color: Colors.black87),
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    hintStyle: TextStyle(color: Colors.amber[600]),
+                    prefixIcon: Icon(Icons.lock, color: Colors.amber[600]),
+                    border: const UnderlineInputBorder(),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[300]!),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 30),
+
+                // LOGIN BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+
+                  child: ElevatedButton(
+
+                    onPressed: () async {
+
+                      var email = emailController.text;
+                      var password = passwordController.text;
+
+                      try {
+
+                        await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Login Successful"),
+                          ),
+                        );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const home(),
+                          ),
+                        );
+
+                      } on FirebaseAuthException catch (e) {
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e.message.toString()),
+                          ),
+                        );
+                      }
+
                     },
-                    child: const Text(
-                      "Sign Up",
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    child: Text(
+                      "LOGIN",
                       style: TextStyle(
-                        color: Colors.blue,
+                        fontSize: 16,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
 
+                SizedBox(height: 20),
 
-            ],
+                // SIGN UP LINK
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    Text(
+                      "Don't have an account ? ",
+                      style: TextStyle(color: Colors.black54),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Colors.amber[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+
+              ],
+            ),
           ),
-        ),
+
+        ],
       ),
     );
   }

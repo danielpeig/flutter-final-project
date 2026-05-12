@@ -39,49 +39,135 @@ class _homeState extends State<home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Restaurant Review"),
-          centerTitle: true,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFE07970),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "CraveHunt",
+          style: TextStyle(
+            color: Colors.amber,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        centerTitle: true,
+      ),
 
       drawer: Drawer(
+        backgroundColor: Color(0xFFCDD7D8), // Powder Blue
         child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+
+            // ── WAVE HEADER ──
+            Container(
+              height: 200,
+              color: Color(0xFFCDD7D8), // Powder Blue
+              child: Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    child: Icon(Icons.person),
+
+                  // Salmon Paste blob
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 160,
+                      decoration:  BoxDecoration(
+                        color: Color(0xFFE07970), // Salmon Paste
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(40),
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                      FirebaseAuth.instance.currentUser?.displayName ?? ""
+
+                  // Cantaloupe wave shape
+                  Positioned(
+                    top: 40,
+                    left: -30,
+                    child: Container(
+                      height: 150,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFDE8948), // Cantaloupe
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(120),
+                          topRight: Radius.circular(100),
+                        ),
+                      ),
+                    ),
                   ),
-                  Text(
-                    FirebaseAuth.instance.currentUser?.email ?? ""
+
+                  // Profile info
+                  Positioned(
+                    bottom: 16,
+                    left: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Color(0xFFF9D58D), // Lemon Posset
+                          child: Icon(
+                            Icons.person,
+                            color: Color(0xFFE07970), // Salmon
+                            size: 40,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          FirebaseAuth.instance.currentUser?.displayName ?? "",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          FirebaseAuth.instance.currentUser?.email ?? "",
+                          style:  TextStyle(
+                            fontSize: 12,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
                 ],
               ),
             ),
+
+            SizedBox(height: 10),
+
+            // ── LOGOUT ──
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Logout"),
+              leading: Icon(Icons.logout, color: Color(0xFFE07970)), // Salmon
+              title: Text(
+                "Logout",
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
-                Navigator.push(context,
-                    MaterialPageRoute(
-                        builder: (context)=> LoginPage()
-                    ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
                 );
               },
             ),
+
           ],
         ),
       ),
 
-        backgroundColor: Color.fromARGB (220, 248, 250, 252),
+
+      backgroundColor: Color.fromARGB (220, 248, 250, 252),
 
         body: Center(
           child: Column(
@@ -89,18 +175,19 @@ class _homeState extends State<home> {
 
               // Search Bar *make functional
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(5.0),
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search restaurants...',
-                    prefixIcon: const Icon(Icons.search),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
+                    prefixIcon: Icon(Icons.search, color: Color(0xFFE07970)),
+                    enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide(color: Color(0xFFCDD7D8), width: 1),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Color(0xFFE07970), width: 1.5),
+                    ),
                   ),
                 ),
               ),
@@ -208,9 +295,9 @@ class _homeState extends State<home> {
                                               ],
                                             ),
 
-                                            const SizedBox(width: 8),
+                                            SizedBox(width: 8),
 
-                                            const Text(
+                                            Text(
                                               "4.5",
                                               style: TextStyle(
                                                 fontSize: 16,

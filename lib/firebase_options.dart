@@ -73,4 +73,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'restaurant-reviews-app-e7a11.firebasestorage.app',
     measurementId: 'G-5KT5T9R27L',
   );
+
 }
