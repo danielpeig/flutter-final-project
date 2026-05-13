@@ -12,43 +12,11 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  bool _isFavorited = false;
-  int _selectedNavIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF017075),
-
-      // ── BOTTOM NAVIGATION BAR ──
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedNavIndex,
-          onTap: (index) => setState(() => _selectedNavIndex = index),
-          backgroundColor: Colors.white,
-          selectedItemColor: const Color(0xFF017075),
-          unselectedItemColor: Colors.grey[400],
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.favorite_border_rounded, size: 26),
-                label: 'Favorites'),
-          ],
-        ),
-      ),
 
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
@@ -106,25 +74,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              GestureDetector(
-                                onTap: () => setState(
-                                        () => _isFavorited = !_isFavorited),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    _isFavorited
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: Colors.amber[600],
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
+
                             ],
                           ),
 
@@ -317,6 +267,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                               color: Colors.grey[400],
                                               fontSize: 15),
                                         ),
+                                        SizedBox(height: 105),
                                       ],
                                     ),
                                   ),
@@ -377,24 +328,38 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                             const SizedBox(width: 12),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  const Text(
-                                                    "Customer Reviewer",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight
-                                                            .bold,
-                                                        fontSize: 15),
+                                                  // Nested StreamBuilder to fetch the specific user's data
+                                                  StreamBuilder<DocumentSnapshot>(
+                                                    stream: FirebaseFirestore.instance
+                                                        .collection('tbl_users')
+                                                        .doc(reviewData['user_id']) // The ID of the person who wrote the review
+                                                        .snapshots(),
+                                                    builder: (context, userSnapshot) {
+                                                      // Default name while loading or if user is not found
+                                                      String reviewerName = "Loading...";
+
+                                                      if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                                                        var userData = userSnapshot.data!.data() as Map<String, dynamic>;
+                                                        reviewerName = userData['fullname'] ?? "Anonymous User";
+                                                      }
+
+                                                      return Text(
+                                                        reviewerName,
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                   Text(
                                                     "Posted on $formattedDate",
                                                     style: TextStyle(
-                                                        color: Colors
-                                                            .grey.shade400,
-                                                        fontSize: 12),
+                                                        color: Colors.grey.shade400,
+                                                        fontSize: 12
+                                                    ),
                                                   ),
                                                 ],
                                               ),

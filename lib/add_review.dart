@@ -21,41 +21,14 @@ class _AddReviewPageState extends State<AddReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE07970),
-
-      // ── BOTTOM NAVIGATION BAR ──
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedNavIndex,
-          onTap: (index) => setState(() => _selectedNavIndex = index),
-          backgroundColor: Colors.white,
-          selectedItemColor: Colors.amber[600],
-          unselectedItemColor: Colors.grey[400],
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite_border_rounded, size: 26), label: 'Favorites'),
-          ],
-        ),
-      ),
+      backgroundColor: Color(0xFF015C63),
 
       body: Column(
         children: [
 
           // ── AMBER TOP HEADER ──
           Container(
-            color: Color(0xFFE07970),
+            color: Color(0xFF015C63),
             width: 500,
             padding: const EdgeInsets.fromLTRB(20, 56, 20, 24),
             child: Column(
@@ -130,7 +103,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.star_rate_rounded, color: Color(0xFFE07970), size: 22),
+                            Icon(Icons.star_rate_rounded, color: Colors.amber[500], size: 22),
                             const SizedBox(width: 8),
                             const Text(
                               "Your Rating",
@@ -169,7 +142,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: rating > 0 ? const Color(0xFFE07970) : Colors.grey[400],
+                            color: rating > 0 ? Colors.black : Colors.grey[400],
                           ),
                         ),
                       ],
@@ -197,7 +170,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.rate_review_outlined, color: Color(0xFFE07970), size: 22),
+                            const Icon(Icons.rate_review_outlined, color: Color(0xFF015C63), size: 22),
                             const SizedBox(width: 8),
                             const Text(
                               "Write your Review",
@@ -247,7 +220,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
               height: 52,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE07970),
+                  backgroundColor: const Color(0xFF015C63),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -293,7 +266,7 @@ class _AddReviewPageState extends State<AddReviewPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Review submitted!'),
-                        backgroundColor: Color(0xFFE07970),
+                        backgroundColor: Color(0xFF015C63),
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
@@ -301,8 +274,8 @@ class _AddReviewPageState extends State<AddReviewPage> {
                     Navigator.pop(context);
                   }
                 },
-                icon: const Icon(Icons.send_rounded, color: Colors.white, size: 18),
-                label: const Text(
+                icon: Icon(Icons.send_rounded, color: Colors.white, size: 18),
+                label: Text(
                   'Submit Review',
                   style: TextStyle(
                     color: Colors.white,

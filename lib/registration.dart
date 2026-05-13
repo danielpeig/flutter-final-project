@@ -29,22 +29,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
           // ── YELLOW WAVE HEADER ──
           Container(
-            height: 280,
+            height: 300, // Slightly taller to accommodate the text
             width: double.infinity,
             color: Colors.white,
             child: Stack(
               children: [
-
-                // Yellow background blob
+                // Dark Teal background blob
                 Positioned(
                   top: 0,
                   left: 0,
-                  right: 50,
+                  right: 40,
                   child: Container(
-                    height: 200,
+                    height: 220,
                     decoration: BoxDecoration(
-                      color: Color(0xFF017075),
-                      borderRadius: BorderRadius.only(
+                      color: const Color(0xFF017075),
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(80),
                         bottomRight: Radius.circular(180),
                       ),
@@ -55,13 +54,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Second wave shape
                 Positioned(
                   top: 60,
-                  left:0,
+                  left: 0,
                   child: Container(
                     height: 180,
                     width: 200,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xFF015C63),
-                      borderRadius:  BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(200),
                         topRight: Radius.circular(100),
                       ),
@@ -69,41 +68,36 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
 
-                // Title at bottom of wave
+                // "Join Us!" Title
                 Positioned(
-                  bottom: 80,
+                  top: 80, // Moved up from bottom to avoid overlapping subtext
                   left: 30,
-                  child: SizedBox(
-                    width: 400,
-                    child: Text(
-                      "Join Us!",
-                      softWrap: true,
-                      style: TextStyle(
-                        fontSize: 80,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.amber[500],
-                      ),
+                  child: Text(
+                    "Join Us!",
+                    style: TextStyle(
+                      fontSize: 60, // Reduced from 80 to fit better
+                      fontWeight: FontWeight.w900,
+                      color: Colors.amber[500],
                     ),
                   ),
                 ),
 
+                SizedBox(height: 10),
+
+                // Subtext
                 Positioned(
-                  top:200,
-                  bottom: 10,
+                  bottom: 10, // Anchored to bottom
                   left: 30,
-                  child: SizedBox(
-                    width: 450, // adjust width
-                    child: Text(
-                      "Create your CraveHunt account to discover delicious restaurants and trusted reviews.",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.amber[700],
-                      ),
+                  right: 30, // Use right instead of fixed width to prevent overflow
+                  child: Text(
+                    "Create your CraveHunt account to discover delicious restaurants and trusted reviews.",
+                    style: TextStyle(
+                      fontSize: 16, // Reduced from 25 for better readability
+                      fontWeight: FontWeight.w500,
+                      color: Colors.amber[700],
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -114,17 +108,6 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    "Create Your Account",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black12,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
 
                SizedBox(height: 10),
 
@@ -336,7 +319,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         );
                       },
                       child: Text(
-                        "Login Up",
+                        "Login",
                         style: TextStyle(
                           color: Colors.amber[700],
                           fontWeight: FontWeight.bold,

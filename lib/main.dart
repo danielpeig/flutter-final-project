@@ -21,7 +21,7 @@ class RestaurantApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
     );
@@ -44,11 +44,14 @@ class home extends StatefulWidget {
 class _homeState extends State<home> {
   int _selectedCategoryIndex = 0;
   int _selectedNavIndex = 0;
+  TextEditingController searchController = TextEditingController();
+  String searchText = "";
+  String sortBy = "Popular"; // Default sorting state
 
-  final List<Map<String, dynamic>> _categories = [
-    {'label': 'All', 'icon': Icons.dinner_dining},
-    {'label': 'Restaurant', 'icon': Icons.restaurant},
-    {'label': 'Cafe', 'icon': Icons.local_cafe},
+  // Updated to match your 10 specific DB categories
+  final List<String> _categories = [
+    "All", "Fine Dining", "Fast Casual", "Date Night", "Family Friendly",
+    "Hidden Gems", "Healthy Eats", "Late Night", "Quick Bites", "Boozy Brunch", "Outdoor Seating"
   ];
 
   @override
@@ -71,12 +74,6 @@ class _homeState extends State<home> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
       ),
 
       // ── DRAWER ──
@@ -316,28 +313,26 @@ class _homeState extends State<home> {
 
                 // Search Bar
                 Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                   child: TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search restaurants...',
-                      hintStyle:
-                      TextStyle(color: Colors.grey[400], fontSize: 14),
-                      prefixIcon: Icon(Icons.search,
-                          color: Color(0xFF034C52), size: 22),
-                      border: InputBorder.none,
-                      contentPadding:
-                      const EdgeInsets.symmetric(vertical: 14),
+                      hintText: "Search restaurants...",
+                      // Clickable icon on the right
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search, color: Color(0xFF015C63)),
+                        onPressed: () {
+                          setState(() {
+                            searchText = searchController.text.toLowerCase();
+                          });
+                        },
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
@@ -346,83 +341,33 @@ class _homeState extends State<home> {
           ),
 
           // ── CATEGORY CHIPS ──
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(_categories.length, (index) {
-                final isSelected = _selectedCategoryIndex == index;
-                return GestureDetector(
-                  onTap: () =>
-                      setState(() => _selectedCategoryIndex = index),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 140,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? const Color(0xFF017075)
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+              children: _categories.map((cat) {
+                final isSelected = _categories.indexOf(cat) == _selectedCategoryIndex;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: ChoiceChip(
+                    label: Text(cat),
+                    selected: isSelected,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedCategoryIndex = _categories.indexOf(cat);
+                      });
+                    },
+                    selectedColor: const Color(0xFF017075),
+                    backgroundColor: Colors.white,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.white : Colors.grey[600],
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          _categories[index]['icon'],
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[500],
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _categories[index]['label'],
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: isSelected
-                                ? Colors.white
-                                : Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
                 );
-              }),
-            ),
-          ),
-
-          // ── SORT LABEL ──
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Row(
-              children: [
-                const Text(
-                  "Sort By  ",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                  ),
-                ),
-                Text(
-                  "Popular",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.amber[700],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+              }).toList(),
             ),
           ),
 
@@ -440,20 +385,36 @@ class _homeState extends State<home> {
                   );
                 }
 
-                if (snapshots.hasError) {
-                  return const Center(
-                      child: Text("Something went wrong"));
-                }
+                // Use .where to strictly enforce BOTH category and search
+                var docs = snapshots.data!.docs.where((doc) {
+                  // Use doc.get() for safer access to fields
+                  String name = (doc.get('name') ?? "").toString().toLowerCase();
+                  String dbCategory = (doc.get('category') ?? "").toString();
+                  String selectedCat = _categories[_selectedCategoryIndex];
 
-                var displayRestos = snapshots.data!.docs;
+                  // LOGIC: The restaurant must match the search text...
+                  bool matchesSearch = name.contains(searchText.toLowerCase());
+
+                  // ...AND it must match the category (if one is selected)
+                  bool matchesCategory = (selectedCat == "All") || (dbCategory == selectedCat);
+
+                  return matchesSearch && matchesCategory;
+                }).toList();
+
+                // (Keep your simplified sorting logic here...)
+
+                if (docs.isEmpty) return const Center(child: Text("No restaurants found"));
+
+                // var displayRestos = snapshots.data!.docs;
 
                 return ListView.builder(
                   padding:
                   const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  itemCount: displayRestos.length,
+                  itemCount: docs.length,
                   itemBuilder: (context, index) {
-                    var restos = displayRestos[index];
+                    var restos = docs[index];
                     String restoId = restos.id;
+                    double currentRating = double.parse(restos['rating'].toString()); // Safe conversion
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
@@ -521,30 +482,27 @@ class _homeState extends State<home> {
                                   Row(
                                     children: [
                                       Row(
-                                        children:
-                                        List.generate(5, (i) {
-                                          return Icon(
-                                            i < 4
-                                                ? Icons.star
-                                                : Icons.star_border,
-                                            color: Colors.amber[400],
-                                            size: 18,
-                                          );
+                                        children: List.generate(5, (starIndex) {
+                                          double starPosition = starIndex + 1.0;
+
+                                          if (currentRating >= starPosition) {
+                                            return Icon(Icons.star, color: Colors.amber[400], size: 18);
+                                          } else if (currentRating > starIndex && currentRating < starPosition) {
+                                            return Icon(Icons.star_half, color: Colors.amber[400], size: 18);
+                                          } else {
+                                            return Icon(Icons.star_border, color: Colors.amber[400], size: 18);
+                                          }
                                         }),
                                       ),
                                       const SizedBox(width: 6),
                                       Container(
-                                        padding:
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 2),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
                                           color: Colors.amber[50],
-                                          borderRadius:
-                                          BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: Text(
-                                          "4.5",
+                                          currentRating.toStringAsFixed(1), // Shows 4.8 instead of 4.800001
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: Colors.amber[700],
@@ -612,36 +570,6 @@ class _homeState extends State<home> {
             ),
           ),
         ],
-      ),
-
-      // ── BOTTOM NAVIGATION BAR ──
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _selectedNavIndex,
-          onTap: (index) => setState(() => _selectedNavIndex = index),
-          backgroundColor: Colors.white,
-          selectedItemColor: Colors.amber[500],
-          unselectedItemColor: Colors.grey[400],
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded, size: 26), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.favorite_border_rounded, size: 26),
-                label: 'Favorites'),
-          ],
-        ),
       ),
     );
   }

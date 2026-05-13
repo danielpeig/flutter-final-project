@@ -27,22 +27,21 @@ class _LoginPageState extends State<LoginPage> {
 
           // ── YELLOW WAVE HEADER ──
           Container(
-            height: 300,
+            height: 280, // Reduced slightly to keep the form visible
             width: double.infinity,
             color: Colors.white,
             child: Stack(
               children: [
-
-                // Yellow background blob
+                // Dark Teal background blob
                 Positioned(
                   top: 0,
                   left: 0,
-                  right: 50,
+                  right: 40,
                   child: Container(
                     height: 200,
-                    decoration: BoxDecoration(
-                      color:  Color(0xFF017075),
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF017075),
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(80),
                         bottomRight: Radius.circular(180),
                       ),
@@ -53,13 +52,13 @@ class _LoginPageState extends State<LoginPage> {
                 // Second wave shape
                 Positioned(
                   top: 60,
-                  left:0,
+                  left: 0,
                   child: Container(
                     height: 180,
                     width: 200,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xFF015C63),
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(200),
                         topRight: Radius.circular(100),
                       ),
@@ -67,30 +66,39 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                // Title at bottom of wave
+                // "Welcome to" - Now smaller and more elegant
                 Positioned(
-                  bottom: 100,
+                  top: 75,
                   left: 30,
                   child: Text(
                     "Welcome to",
                     style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.amber[500],
+                      fontSize: 24, // Dropped from 35 for better contrast with the brand name
+                      fontWeight: FontWeight.w500, // Changed from w900 to make it look cleaner
+                      color: Colors.white.withOpacity(0.9), // White looks sharper against the teal background
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ),
 
+                // "CraveHunt!" - The main focus
                 Positioned(
-                  top: 180,
-                  bottom: 5,
+                  top: 105, // Lowered slightly to create clear separation
                   left: 30,
+                  right: 20,
                   child: Text(
                     "CraveHunt!",
                     style: TextStyle(
-                      fontSize: 80,
+                      fontSize: 55, // 55 is the sweet spot for mobile brand titles
                       fontWeight: FontWeight.w900,
-                      color: Colors.amber[700],
+                      color: Colors.amber[500], // Using the primary amber for the logo feel
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black.withOpacity(0.3),
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -109,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                     "Sign-in to your Account",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.black12,
-                      fontSize: 20,
+                      color: Colors.black54, // Changed from black12 for better contrast
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
