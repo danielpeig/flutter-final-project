@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Container(
                     height: 200,
                     decoration: BoxDecoration(
-                      color: Colors.amber[300],
+                      color: Color(0xFF017075),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(80),
                         bottomRight: Radius.circular(180),
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 180,
                     width: 200,
                     decoration: BoxDecoration(
-                      color: Colors.amber[200],
+                      color: Color(0xFF015C63),
                       borderRadius:  BorderRadius.only(
                         bottomRight: Radius.circular(200),
                         topRight: Radius.circular(100),
@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(
                         fontSize: 80,
                         fontWeight: FontWeight.w900,
-                        color: Colors.black,
+                        color: Colors.amber[500],
                       ),
                     ),
                   ),
@@ -92,13 +92,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   bottom: 10,
                   left: 30,
                   child: SizedBox(
-                    width: 400, // adjust width
+                    width: 450, // adjust width
                     child: Text(
                       "Create your CraveHunt account to discover delicious restaurants and trusted reviews.",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 25,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                        color: Colors.amber[700],
                       ),
                     ),
                   ),
@@ -134,11 +134,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: "Full Name",
-                    hintStyle: TextStyle(color: Colors.amber[600]),
-                    prefixIcon: Icon(Icons.person, color: Colors.amber[600]),
+                    hintStyle: TextStyle(color: Color(0xFF015C63)),
+                    prefixIcon: Icon(Icons.person, color: Color(0xFF015C63)),
                     border: UnderlineInputBorder(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber[300]!),
+                      borderSide: BorderSide(color:Color(0xFF015C63)!),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
@@ -154,11 +154,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: "Email",
-                    hintStyle: TextStyle(color: Colors.amber[600]),
-                    prefixIcon: Icon(Icons.email, color: Colors.amber[600]),
+                    hintStyle: TextStyle(color: Color(0xFF015C63)),
+                    prefixIcon: Icon(Icons.email, color: Color(0xFF015C63)),
                     border: UnderlineInputBorder(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber[300]!),
+                      borderSide: BorderSide(color: Color(0xFF015C63)!),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
@@ -174,11 +174,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: "Username",
-                    hintStyle: TextStyle(color: Colors.amber[600]),
-                    prefixIcon: Icon(Icons.account_circle, color: Colors.amber[600]),
+                    hintStyle: TextStyle(color: Color(0xFF015C63)),
+                    prefixIcon: Icon(Icons.account_circle, color: Color(0xFF015C63)),
                     border: UnderlineInputBorder(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber[300]!),
+                      borderSide: BorderSide(color: Color(0xFF015C63)!),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
@@ -195,11 +195,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: "Password",
-                    hintStyle: TextStyle(color: Colors.amber[600]),
-                    prefixIcon: Icon(Icons.lock, color: Colors.amber[600]),
+                    hintStyle: TextStyle(color: Color(0xFF015C63)),
+                    prefixIcon: Icon(Icons.lock, color: Color(0xFF015C63)),
                     border: UnderlineInputBorder(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber[300]!),
+                      borderSide: BorderSide(color: Color(0xFF015C63)!),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
@@ -216,11 +216,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.black87),
                   decoration: InputDecoration(
                     hintText: "Confirm Password",
-                    hintStyle: TextStyle(color: Colors.amber[600]),
-                    prefixIcon: Icon(Icons.lock, color: Colors.amber[600]),
+                    hintStyle: TextStyle(color: Color(0xFF015C63)),
+                    prefixIcon: Icon(Icons.lock, color: Color(0xFF015C63)),
                     border: UnderlineInputBorder(),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.amber[300]!),
+                      borderSide: BorderSide(color: Color(0xFF015C63)!),
                     ),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.amber[600]!, width: 2),
@@ -296,7 +296,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     },
 
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
+                      backgroundColor: Color(0xFF015C63),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
